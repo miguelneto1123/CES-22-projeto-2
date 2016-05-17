@@ -6,10 +6,10 @@
 package engine;
 
 public class BoundingBox {
-	private int width;
-	private int height;
-	private int x;
-	private int y;
+	protected int width;
+	protected int height;
+	protected int x;
+	protected int y;
 	
 	public int getWidth(){
 		return width;
