@@ -5,7 +5,12 @@ import javax.swing.JFrame;
 
 
 public class Application extends JFrame {
-
+	private Board b = new Board();
+	
+	public Board getBoard() {
+		return b;
+	}
+	
     public Application() {
         
         initUI();
@@ -13,7 +18,7 @@ public class Application extends JFrame {
     
     private void initUI() {
         
-        add(new Board());
+        add(b);
         
         setSize(600, 400);
         setResizable(false);

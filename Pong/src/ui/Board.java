@@ -27,6 +27,9 @@ public class Board extends JPanel implements ActionListener {
     private Racket leftRacket;
     private Racket rightRacket;
     private final int DELAY = 10;
+    
+    private boolean gameStart;
+    private boolean gamePaused;
 
     public Board() {
 
@@ -46,6 +49,9 @@ public class Board extends JPanel implements ActionListener {
         		                 boardWidth - racketWidth - goalWidth,
         		                 boardHeight/2 - racketHeight/2, 'R');
         
+        gameStart = true;
+        gamePaused = true;
+        
         timer = new Timer(DELAY, this);
         timer.start();        
     }
@@ -63,53 +69,91 @@ public class Board extends JPanel implements ActionListener {
     private void doDrawing(Graphics g) {
         
         Graphics2D g2d = (Graphics2D) g;
-        
-        if (!ball.endGameLeft() && !ball.endGameRight()){
-            g2d.drawImage(leftRacket.getImage(), leftRacket.getX(),
-            	leftRacket.getY(), this); 
-            
-            g2d.drawImage(rightRacket.getImage(), rightRacket.getX(),
-            	rightRacket.getY(), this);
-            
-            g2d.drawImage(ball.getLeftScore(), leftScoreX, scoreY, this);
-            
-            g2d.drawImage(ball.getRightScore(), rightScoreX, scoreY, this);
-            
-            g2d.setColor(Color.WHITE);
-            
-            g2d.drawLine(boardWidth / 2, 0, boardWidth / 2, boardHeight);
-            
-            g2d.drawImage(ball.getImage(), ball.getX(),
-                	ball.getY(), this);
-        }
-        
-        else if (ball.endGameLeft()){
+        if (gameStart) {
         	Font f = new Font("Verdana", Font.PLAIN, 20);
         	g2d.setFont(f);
         	g2d.setColor(Color.WHITE);
-        	g2d.drawString("Left player wins!", leftScoreX, boardHeight / 2);
+        	g2d.drawString("Press ESC to start", leftScoreX,
+    				boardHeight / 2);
         }
-        
-        else if (ball.endGameRight()){
-        	Font f = new Font("Verdana", Font.PLAIN, 20);
-        	g2d.setFont(f);
-        	g2d.setColor(Color.WHITE);
-        	g2d.drawString("Right player wins!", leftScoreX, boardHeight / 2);
+        else {
+        	if (gamePaused) {
+	        	Font f = new Font("Verdana", Font.PLAIN, 20);
+	        	g2d.setFont(f);
+	        	g2d.setColor(Color.WHITE);
+	        	g2d.drawString("Press ESC to continue", leftScoreX,
+	        				boardHeight / 2);
+	        }
+	        if (!gameOver()){
+	            g2d.drawImage(leftRacket.getImage(), leftRacket.getX(),
+	            	leftRacket.getY(), this); 
+	            
+	            g2d.drawImage(rightRacket.getImage(), rightRacket.getX(),
+	            	rightRacket.getY(), this);
+	            
+	            g2d.drawImage(ball.getLeftScore(), leftScoreX, scoreY, this);
+	            
+	            g2d.drawImage(ball.getRightScore(), rightScoreX, scoreY, this);
+	            
+	            g2d.setColor(Color.WHITE);
+	            
+	            g2d.drawLine(boardWidth / 2, 0, boardWidth / 2, boardHeight);
+	            
+	            g2d.drawImage(ball.getImage(), ball.getX(),
+	                	ball.getY(), this);
+	        }
+	        
+	        else if (ball.endGameLeft()){
+	        	Font f = new Font("Verdana", Font.PLAIN, 20);
+	        	g2d.setFont(f);
+	        	g2d.setColor(Color.WHITE);
+	        	g2d.drawString("Left player wins!", leftScoreX,
+	        			boardHeight / 2);
+	        }
+	        
+	        else if (ball.endGameRight()){
+	        	Font f = new Font("Verdana", Font.PLAIN, 20);
+	        	g2d.setFont(f);
+	        	g2d.setColor(Color.WHITE);
+	        	g2d.drawString("Right player wins!", leftScoreX,
+	        			boardHeight / 2);
+	        }
         }
       
+    }
+    
+    public void pauseGame(KeyEvent e) {
+    	if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+    		gamePaused = true;
+    }
+    
+    public void unpauseGame(KeyEvent e) {
+    	if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+    		gamePaused = false;
+    		gameStart = false;
+    	}
+    }
+    
+    public boolean gameOver(){
+    	return ball.endGameLeft() || ball.endGameRight();
+    }
+    
+    public void gameUpdate(){
+    	ball.applyBoundedCollision(0, boardHeight);
+    	ball.applyRacketCollision(leftRacket);
+    	ball.applyRacketCollision(rightRacket);
+    	ball.leftGoal(0, boardWidth/2, boardHeight/2);
+    	ball.rightGoal(boardWidth, boardWidth/2, boardHeight/2);
+    	ball.move();
+    	leftRacket.move(0, boardHeight);
+        rightRacket.move(0, boardHeight);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    	if (!ball.endGameLeft() && !ball.endGameRight()){
-	    	ball.applyBoundedCollision(0, boardHeight);
-	    	ball.applyRacketCollision(leftRacket);
-	    	ball.applyRacketCollision(rightRacket);
-	    	ball.leftGoal(0, boardWidth/2, boardHeight/2);
-	    	ball.rightGoal(boardWidth, boardWidth/2, boardHeight/2);
-	    	ball.move();
-	    	leftRacket.move(0, boardHeight);
-	        rightRacket.move(0, boardHeight);
+    	if (!gameOver()){
+    		if(!gamePaused)
+    			gameUpdate();
     	}
         repaint();  
     }
@@ -126,6 +170,12 @@ public class Board extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
         	leftRacket.keyPressed(e);
         	rightRacket.keyPressed(e);
+        	if (gamePaused) {
+        		unpauseGame(e);
+        	}
+        	else {
+        		pauseGame(e);
+        	}
         }
     }
 }
