@@ -50,6 +50,6 @@ public class BoundingBox {
 	}
 	
 	public boolean isInYLimits(int yMin, int yMax) {
-		return y > yMax - height || y < yMin;
+		return y < yMax - height && y > yMin ;
 	}
 }

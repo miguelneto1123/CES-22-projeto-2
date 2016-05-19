@@ -1,18 +1,30 @@
 package engine;
 
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
 import utils.*;
 
 public class Ball extends BoundingBox {
 	private int xSpeed = 2;
 	private int ySpeed = 2;
+	private Image image;
 	
 	public Ball(int w, int h, int x, int y) {
 		super(w, h, x, y);
+		ImageIcon ii = new ImageIcon("ball.png");
+        image = ii.getImage();
 	}
+	
+	public Image getImage() {
+        return image;
+    }
 	
 	public void move() {
 		setX(x + xSpeed);
 		setY(y + ySpeed);
+		
 	}
 	
 	public boolean detectBoundedCollision(int yMin, int yMax){
