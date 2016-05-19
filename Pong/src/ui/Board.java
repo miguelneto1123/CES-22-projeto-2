@@ -49,11 +49,16 @@ public class Board extends JPanel implements ActionListener {
         		                 boardWidth - racketWidth - goalWidth,
         		                 boardHeight/2 - racketHeight/2, 'R');
         
-        gameStart = true;
-        gamePaused = true;
+        startGame();
         
         timer = new Timer(DELAY, this);
         timer.start();        
+    }
+    
+    private void startGame() {
+    	gameStart = true;
+        gamePaused = true;
+        ball.resetScores();
     }
 
 
@@ -73,7 +78,7 @@ public class Board extends JPanel implements ActionListener {
         	Font f = new Font("Verdana", Font.PLAIN, 20);
         	g2d.setFont(f);
         	g2d.setColor(Color.WHITE);
-        	g2d.drawString("Press ESC to start", leftScoreX,
+        	g2d.drawString("Press ENTER to start", leftScoreX - 20,
     				boardHeight / 2);
         }
         else {
@@ -81,7 +86,7 @@ public class Board extends JPanel implements ActionListener {
 	        	Font f = new Font("Verdana", Font.PLAIN, 20);
 	        	g2d.setFont(f);
 	        	g2d.setColor(Color.WHITE);
-	        	g2d.drawString("Press ESC to continue", leftScoreX,
+	        	g2d.drawString("Press ENTER to continue", leftScoreX - 20,
 	        				boardHeight / 2);
 	        }
 	        if (!gameOver()){
@@ -107,28 +112,38 @@ public class Board extends JPanel implements ActionListener {
 	        	Font f = new Font("Verdana", Font.PLAIN, 20);
 	        	g2d.setFont(f);
 	        	g2d.setColor(Color.WHITE);
-	        	g2d.drawString("Left player wins!", leftScoreX,
-	        			boardHeight / 2);
+	        	g2d.drawString("Left player wins!",
+	        			leftScoreX, boardHeight / 2);
+	        	g2d.drawString("Press ENTER to restart",
+	        			leftScoreX - 20, boardHeight / 2 + 80);
 	        }
 	        
 	        else if (ball.endGameRight()){
 	        	Font f = new Font("Verdana", Font.PLAIN, 20);
 	        	g2d.setFont(f);
 	        	g2d.setColor(Color.WHITE);
-	        	g2d.drawString("Right player wins!", leftScoreX,
-	        			boardHeight / 2);
+	        	g2d.drawString("Right player wins!",
+	        			leftScoreX, boardHeight / 2);
+	        	g2d.drawString("Press ENTER to restart",
+	        			leftScoreX - 20, boardHeight / 2 + 80);
 	        }
         }
       
     }
     
+    public void restartGame(KeyEvent e){
+    	if (e.getKeyCode() == KeyEvent.VK_ENTER)
+    		startGame();
+    }
+    
+    
     public void pauseGame(KeyEvent e) {
-    	if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+    	if(e.getKeyCode() == KeyEvent.VK_ENTER)
     		gamePaused = true;
     }
     
     public void unpauseGame(KeyEvent e) {
-    	if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+    	if(e.getKeyCode() == KeyEvent.VK_ENTER){
     		gamePaused = false;
     		gameStart = false;
     	}
@@ -175,6 +190,9 @@ public class Board extends JPanel implements ActionListener {
         	}
         	else {
         		pauseGame(e);
+        	}
+        	if (gameOver()) {
+        		restartGame(e);
         	}
         }
     }

@@ -121,4 +121,9 @@ public class Ball extends BoundingBox {
 	public boolean endGameRight(){
 		return rightScore > 6;
 	}
+	
+	public void resetScores(){
+		rightScore = 0;
+		leftScore = 0;
+	}
 }
