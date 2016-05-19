@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -33,8 +32,8 @@ public class Board extends JPanel implements ActionListener {
     private Racket leftRacket;
     private Racket rightRacket;
     private final int DELAY = 10;
-    
-        public Board() {
+
+    public Board() {
 
         initBoard();
     }
@@ -51,6 +50,7 @@ public class Board extends JPanel implements ActionListener {
         rightRacket = new Racket(racketWidth, racketHeight,
         		                 boardWidth - racketWidth - goalWidth,
         		                 boardHeight/2 - racketHeight/2, 'R');
+        
         timer = new Timer(DELAY, this);
         timer.start();        
     }
@@ -82,17 +82,15 @@ public class Board extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         
     	ball.detectBoundedCollision(0, boardHeight);
-     	ball.applyBoundedCollision(0, boardHeight);
-     	ball.applyRacketCollision(leftRacket);
-     	ball.applyRacketCollision(rightRacket);
-     	ball.leftGoal(goalWidth + racketWidth, boardWidth/2, boardHeight/2);
-     	ball.rightGoal(boardWidth - goalWidth - racketWidth, boardWidth/2, boardHeight/2);
-     	
+    	ball.applyBoundedCollision(0, boardHeight);
+    	ball.applyRacketCollision(leftRacket);
+    	ball.applyRacketCollision(rightRacket);
+    	ball.leftGoal(goalWidth + racketWidth, boardWidth/2, boardHeight/2);
+    	ball.rightGoal(boardWidth - goalWidth - racketWidth, boardWidth/2, boardHeight/2);
     	ball.move();
     	leftRacket.move(0, boardHeight);
         rightRacket.move(0, boardHeight);
-        repaint();
-          
+        repaint();  
     }
 
     private class TAdapter extends KeyAdapter {
