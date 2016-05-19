@@ -1,9 +1,8 @@
 package ui;
 
 import java.awt.EventQueue;
-
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+
 
 public class Application extends JFrame {
 
@@ -25,7 +24,11 @@ public class Application extends JFrame {
     }
 
     public static void main(String[] args) {
-        
+    	
+    	Song s =  new Song("Justin_Bieber_-_Baby_ft.wav");
+    	Thread t = new Thread(s);
+    	t.start();
+    	
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -35,4 +38,5 @@ public class Application extends JFrame {
             }
         });
     }
+
 }
