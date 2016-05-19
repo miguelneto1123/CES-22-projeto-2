@@ -1,31 +1,26 @@
 package ui;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import engine.Ball;
 import engine.Racket;
 
 public class Board extends JPanel implements ActionListener {
 	
-	public int ballWidth = 16;
-	public int ballHeight = 16;
+	private int ballWidth = 16;
+	private int ballHeight = 16;
 	
-	public int racketWidth = 16;
-	public int racketHeight = 60;
+	private int racketWidth = 16;
+	private int racketHeight = 60;
 	
-	public int boardWidth = 800;
-    public int boardHeight = 600;
-    public int goalWidth = 16;
+	private int boardWidth = 600;
+    private int boardHeight = 400;
+    private int goalWidth = 16;
+    
+    private int leftScoreX = (boardWidth / 2) - 82;
+    private int rightScoreX = (boardWidth / 2) + 50;
+    private int scoreY = 20;
 	
 	private Timer timer;
 	private Ball ball;
@@ -42,7 +37,7 @@ public class Board extends JPanel implements ActionListener {
         
         addKeyListener(new TAdapter());
         setFocusable(true);
-        setBackground(Color.WHITE);
+        setBackground(Color.BLACK);
         
         ball = new Ball (ballWidth, ballHeight, boardWidth/2, boardHeight/2);
         leftRacket = new Racket(racketWidth, racketHeight, 
@@ -69,27 +64,53 @@ public class Board extends JPanel implements ActionListener {
         
         Graphics2D g2d = (Graphics2D) g;
         
-        g2d.drawImage(ball.getImage(), ball.getX(), ball.getY(), this);
+        if (!ball.endGameLeft() && !ball.endGameRight()){
+            g2d.drawImage(leftRacket.getImage(), leftRacket.getX(),
+            	leftRacket.getY(), this); 
+            
+            g2d.drawImage(rightRacket.getImage(), rightRacket.getX(),
+            	rightRacket.getY(), this);
+            
+            g2d.drawImage(ball.getLeftScore(), leftScoreX, scoreY, this);
+            
+            g2d.drawImage(ball.getRightScore(), rightScoreX, scoreY, this);
+            
+            g2d.setColor(Color.WHITE);
+            
+            g2d.drawLine(boardWidth / 2, 0, boardWidth / 2, boardHeight);
+            
+            g2d.drawImage(ball.getImage(), ball.getX(),
+                	ball.getY(), this);
+        }
         
-        g2d.drawImage(leftRacket.getImage(), leftRacket.getX(), leftRacket.getY(), this); 
+        else if (ball.endGameLeft()){
+        	Font f = new Font("Verdana", Font.PLAIN, 20);
+        	g2d.setFont(f);
+        	g2d.setColor(Color.WHITE);
+        	g2d.drawString("Left player wins!", leftScoreX, boardHeight / 2);
+        }
         
-        g2d.drawImage(rightRacket.getImage(), rightRacket.getX(), rightRacket.getY(), this); 
-
+        else if (ball.endGameRight()){
+        	Font f = new Font("Verdana", Font.PLAIN, 20);
+        	g2d.setFont(f);
+        	g2d.setColor(Color.WHITE);
+        	g2d.drawString("Right player wins!", leftScoreX, boardHeight / 2);
+        }
       
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        
-    	ball.detectBoundedCollision(0, boardHeight);
-    	ball.applyBoundedCollision(0, boardHeight);
-    	ball.applyRacketCollision(leftRacket);
-    	ball.applyRacketCollision(rightRacket);
-    	ball.leftGoal(goalWidth + racketWidth, boardWidth/2, boardHeight/2);
-    	ball.rightGoal(boardWidth - goalWidth - racketWidth, boardWidth/2, boardHeight/2);
-    	ball.move();
-    	leftRacket.move(0, boardHeight);
-        rightRacket.move(0, boardHeight);
+    	if (!ball.endGameLeft() && !ball.endGameRight()){
+	    	ball.applyBoundedCollision(0, boardHeight);
+	    	ball.applyRacketCollision(leftRacket);
+	    	ball.applyRacketCollision(rightRacket);
+	    	ball.leftGoal(0, boardWidth/2, boardHeight/2);
+	    	ball.rightGoal(boardWidth, boardWidth/2, boardHeight/2);
+	    	ball.move();
+	    	leftRacket.move(0, boardHeight);
+	        rightRacket.move(0, boardHeight);
+    	}
         repaint();  
     }
 

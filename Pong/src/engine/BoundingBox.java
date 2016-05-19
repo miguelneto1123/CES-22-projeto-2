@@ -45,8 +45,11 @@ public class BoundingBox {
 	}
 	
 	public boolean detectCollision(BoundingBox b){
-		return (x > b.getX() && x < b.getX() + b.getWidth()) || 
-				(y > b.getY() && y < b.getY() + b.getHeight());
+		return ((x > b.getX() && x < b.getX() + b.getWidth()) && 
+				(y > b.getY() && y < b.getY() + b.getHeight())) ||
+				((x > b.getX() - width && x < b.getX() + b.getWidth() - width)
+				&& (y > b.getY() - height && y < b.getY() + b.getHeight()
+				- height));
 	}
 	
 	public boolean isInYLimits(int yMin, int yMax) {

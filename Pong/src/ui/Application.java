@@ -15,7 +15,7 @@ public class Application extends JFrame {
         
         add(new Board());
         
-        setSize(800, 600);
+        setSize(600, 400);
         setResizable(false);
         
         setTitle("Pong");

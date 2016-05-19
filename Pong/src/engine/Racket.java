@@ -9,15 +9,15 @@ import javax.swing.ImageIcon;
 
 public class Racket extends BoundingBox {
 	
-	private int upSpeed = -4;
-	private int downSpeed = 4;
+	private int upSpeed = -12;
+	private int downSpeed = 12;
 	private int dy = 0;
-	private char Pos;
+	private char pos;
 	private Image image;
 	
 	public Racket (int w, int h, int x, int y, char Position) {
 		super(w,h,x,y);
-		Pos = Position;
+		pos = Position;
 		ImageIcon ii = new ImageIcon("racket.png");
         image = ii.getImage();
 	}
@@ -39,6 +39,10 @@ public class Racket extends BoundingBox {
 		}
 	}
 	
+	public char getPos() {
+		return pos;
+	}
+	
 	public void move (int yMin, int yMax){
 				setY(y + dy, yMin, yMax);
 	}
@@ -47,11 +51,11 @@ public class Racket extends BoundingBox {
 
         int key = e.getKeyCode();
 
-		if ((key == KeyEvent.VK_O && Pos == 'R') || (key == KeyEvent.VK_W && Pos == 'L')) {
+		if ((key == KeyEvent.VK_UP && pos == 'R') || (key == KeyEvent.VK_W && pos == 'L')) {
             dy = upSpeed;
         }
 
-        if ((key == KeyEvent.VK_L && Pos == 'R') || (key == KeyEvent.VK_S && Pos == 'L')) {
+        if ((key == KeyEvent.VK_DOWN && pos == 'R') || (key == KeyEvent.VK_S && pos == 'L')) {
             dy = downSpeed;
         }
     }
@@ -60,11 +64,11 @@ public class Racket extends BoundingBox {
         
         int key = e.getKeyCode();
 
-        if ((key == KeyEvent.VK_O && Pos == 'R') || (key == KeyEvent.VK_W && Pos == 'L')) {
+        if ((key == KeyEvent.VK_UP && pos == 'R') || (key == KeyEvent.VK_W && pos == 'L')) {
             dy = 0;
         }
 
-        if ((key == KeyEvent.VK_L && Pos == 'R') || (key == KeyEvent.VK_S && Pos == 'L')) {
+        if ((key == KeyEvent.VK_DOWN && pos == 'R') || (key == KeyEvent.VK_S && pos == 'L')) {
             dy = 0;
         }
     }
